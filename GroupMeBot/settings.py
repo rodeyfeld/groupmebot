@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get('GROUPME_BOT_SECRET_KEY', '')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True if os.environ.get('GROUPME_BOT_DEBUG', None) == 'true' else False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'secure-hamlet-54177.herokuapp.com']
 
 
 # Application definition
