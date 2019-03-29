@@ -22,6 +22,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('GROUPME_BOT_SECRET_KEY', '')
 
+#Groupme API Key
+GROUPME_API_KEY = os.environ.get('GROUPME_API_KEY', '')
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True if os.environ.get('GROUPME_BOT_DEBUG', None) == 'true' else False
 
@@ -31,6 +35,7 @@ ALLOWED_HOSTS = ['127.0.0.1', 'secure-hamlet-54177.herokuapp.com']
 # Application definition
 
 INSTALLED_APPS = [
+    'bot.apps.BotConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
