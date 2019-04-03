@@ -79,6 +79,7 @@ WSGI_APPLICATION = 'GroupMeBot.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+DATABASES = {}
 if os.environ.get('GROUPMEBOT_LOCAL', None):    
     DATABASES = {
         'default': {
@@ -92,7 +93,7 @@ if os.environ.get('GROUPMEBOT_LOCAL', None):
     }
 else:
     DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
-    
+
 
 
 # Password validation
