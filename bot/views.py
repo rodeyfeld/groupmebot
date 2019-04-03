@@ -14,24 +14,23 @@ def bot(request, groupme_bot_id):
     request_params = {
         'token': settings.GROUPME_API_KEY
     }
-    print(request)
+    print(request.body)
     # print request.POST.get
-    get_messages(bot, request_params)
+    get_message(bot, request_params)
 
     return HttpResponse("Bot page for %s" % bot_name)
 
 def get_message(bot, request_params):
     groupme_group_id = bot.groupme_group_id
-    response_messages = requests.get('https://api.groupme.com/v3/groups/' + groupme_group_id + '/messages', params = request_params).json()['response']['messages']
-    most_recent_response = response_messages[0]
-    if is_bot_command(most_recent_response):
-        print("Bot has recieved a message")
-    else:
-        print("User or bot has sent a message")
-        
-
-
-
+    try:
+        response_messages = requests.get('https://api.groupme.com/v3/groups/' + groupme_group_id + '/messages', params = request_params).json()['response']['messages']
+        most_recent_response = response_messages[0]
+        if is_bot_command(most_recent_response):
+            print("Bot has recieved a message")
+        else:
+            print("User or bot has sent a message")
+    except:
+        print("It failed bad")
 def is_bot_command(response):
     message = response['text']
     sender_type = response['sender_type']
