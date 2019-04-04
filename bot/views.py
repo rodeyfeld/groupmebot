@@ -14,8 +14,7 @@ def bot(request, groupme_bot_id):
     request_params = {
         'token': settings.GROUPME_API_KEY
     }
-    print(request.body)
-    # print request.POST.get
+    print(bot_name)
     get_message(bot, request_params)
 
     return HttpResponse("Bot page for %s" % bot_name)
