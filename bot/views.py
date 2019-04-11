@@ -11,6 +11,7 @@ def index(request):
 def bot(request, groupme_bot_id):
     bot = Bot.objects.get(groupme_bot_id=groupme_bot_id)
     bot_name = bot.name
+    print(bot_name)
     request_params = {
         'token': settings.GROUPME_API_KEY
     }
@@ -30,7 +31,7 @@ def get_message(bot, request_params):
         print(most_recent_response)
         if is_bot_command(most_recent_response):
             print("Bot has recieved a message")
-            process_command(bot, most_recent_response)
+            process_command(bot, most_recent_response['text'])
         else:
             print("User or bot has sent a message")
             process_response(bot, most_recent_response)
@@ -46,11 +47,13 @@ def is_bot_command(response):
         return True
 
 def process_command(bot, message_response):
+    print(message_response)
     command_tokens = message_response.split()
+    print(command_tokens)
     command = command_tokens[0].replace('!', '').upper()
+    print(command)
     args = command_tokens[1:]
     print(command_tokens)
-
     print(command)
     print(args)
     if command == 'GIF':
