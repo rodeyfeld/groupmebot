@@ -72,7 +72,8 @@ def get_giphy_image_url(search_term):
 def save_temp_image(url):
     print(url)
     response = requests.get(url, stream=True)
-    fpath =  "C:\\Users\\rodey\\PythonApps\\DjangoApps\\GroupMeBot\\bot\\tmp\\"
+    dirname = os.path.dirname(__file__)
+    fpath = os.path.join(dirname, 'tmp')
     fname = "tmp.gif"
     write_path = os.path.join(fpath, fname)
     with open(write_path, 'wb') as writer:
@@ -80,7 +81,8 @@ def save_temp_image(url):
             writer.write(chunk)
 
 def get_image_service_url():
-    fpath =  "C:\\Users\\rodey\\PythonApps\\DjangoApps\\GroupMeBot\\bot\\tmp\\"
+    dirname = os.path.dirname(__file__)
+    fpath = os.path.join(dirname, 'tmp')
     fname = "tmp.gif"
     read_path = os.path.join(fpath, fname)
     with open(read_path, 'rb') as reader:
