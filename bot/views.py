@@ -28,7 +28,6 @@ def get_message(bot, request_params):
         response_messages = requests.get('https://api.groupme.com/v3/groups/' + groupme_group_id + '/messages', params = request_params).json()['response']['messages']
         most_recent_response = response_messages[0]
         print(most_recent_response)
-        most_recent_response = "!gif orca"
         if is_bot_command(most_recent_response):
             print("Bot has recieved a message")
             process_command(bot, most_recent_response)
@@ -41,6 +40,8 @@ def get_message(bot, request_params):
 def is_bot_command(response):
     message = response['text']
     sender_type = response['sender_type']
+    print(message)
+    print(sender_type)
     if message[0] == '!' and sender_type != 'system':
         return True
 
