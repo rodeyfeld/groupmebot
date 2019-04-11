@@ -24,18 +24,18 @@ def test_message(bot, request_params):
 
 def get_message(bot, request_params):
     groupme_group_id = bot.groupme_group_id
-    # try:
-    response_messages = requests.get('https://api.groupme.com/v3/groups/' + groupme_group_id + '/messages', params = request_params).json()['response']['messages']
-    most_recent_response = response_messages[0]
-    print(most_recent_response)
-    if is_bot_command(most_recent_response):
-        print("Bot has recieved a message")
-        process_command(bot, most_recent_response)
-    else:
-        print("User or bot has sent a message")
-        process_response(bot, most_recent_response)
-    # except:
-    #     print("It failed bad")
+    try:
+        response_messages = requests.get('https://api.groupme.com/v3/groups/' + groupme_group_id + '/messages', params = request_params).json()['response']['messages']
+        most_recent_response = response_messages[0]
+        print(most_recent_response)
+        if is_bot_command(most_recent_response):
+            print("Bot has recieved a message")
+            process_command(bot, most_recent_response)
+        else:
+            print("User or bot has sent a message")
+            process_response(bot, most_recent_response)
+    except:
+        print("It failed bad")
 
 def is_bot_command(response):
     message = response['text']
