@@ -41,32 +41,25 @@ def get_message(bot, request_params):
 def is_bot_command(response):
     message = response['text']
     sender_type = response['sender_type']
-    print(message)
-    print(sender_type)
     if message[0] == '!' and sender_type != 'system':
         return True
 
 def process_command(bot, message_response):
-    print(message_response)
     command_tokens = message_response.split()
-    print(command_tokens)
     command = command_tokens[0].replace('!', '').upper()
-    print(command)
     args = command_tokens[1:]
-    print(command_tokens)
-    print(command)
-    print(args)
     if command == 'GIF':
         send_image_message(bot, ' '.join(args))
-
 
 def process_response(bot, message_response):
     return True
 
 def get_giphy_image_url(search_term):
     response = requests.get('https://api.giphy.com/v1/gifs/search', params={'api_key': os.environ.get('GIPHY_API_KEY', ''), 'q': search_term, 'limit': 1})
-    print(response.content)
-    giphy_image_url = response.json()['data'][0]['images']['original']['url']
+    try:
+        giphy_image_url = response.json()['data'][0]['images']['original']['url']
+    except:
+        giphy_image_url = None 
     return giphy_image_url
 
 def save_temp_image(url):
@@ -80,24 +73,29 @@ def save_temp_image(url):
         for chunk in response:
             writer.write(chunk)
 
-def get_image_service_url():
+def get_image_service_url(fname):
     dirname = os.path.dirname(__file__)
     fpath = os.path.join(dirname, 'tmp')
-    fname = "tmp.gif"
+    if fname == "SEARCH_RESULT":
+        fname = "tmp.gif"
+    elif fname == "NO_RESULT":
+        fname = "no_result.gif"
     read_path = os.path.join(fpath, fname)
     with open(read_path, 'rb') as reader:
         reader_data = reader.read()
     response = requests.post(url='https://image.groupme.com/pictures', data=reader_data, headers={'Content-Type': 'image/gif', 'X-Access-Token': os.environ.get('GROUPME_API_KEY', '')})
-    print(response)
-    print(response.content)
     url = response.json()['payload']['url']
     return url
 
 def send_image_message(bot, search_term):
     groupme_bot_id = bot.groupme_bot_id
     giphy_image_url = get_giphy_image_url(search_term)
-    save_temp_image(giphy_image_url)
-    image_service_url = get_image_service_url()
+    if giphy_image_url != None:
+        save_temp_image(giphy_image_url)
+        image_service_url = get_image_service_url("SEARCH_RESULT")
+    else:
+        print("HERE1")
+        image_service_url = get_image_service_url("NO_RESULT")
     request_params = {'bot_id': groupme_bot_id, 'picture_url': image_service_url}
     response = requests.post('https://api.groupme.com/v3/bots/post', params = request_params)
     return response
