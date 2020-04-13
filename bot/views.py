@@ -12,7 +12,7 @@ def index(request):
     return HttpResponse("Bot listener index")
 
 
-def bot_home(request, groupme_bot_id):
+def bot_reciever(request, groupme_bot_id):
     bot = Bot.objects.get(groupme_bot_id=groupme_bot_id)
     bot_name = bot.name
     request_params = {
