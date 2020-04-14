@@ -30,7 +30,7 @@ GROUPME_API_KEY = os.environ.get('GROUPME_API_KEY', '')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True if os.environ.get('GROUPME_BOT_DEBUG', None) == 'true' else False
 
-ALLOWED_HOSTS = ['127.0.0.1', 'groupmebotcouncil.herokuapp.com/']
+ALLOWED_HOSTS = ['127.0.0.1', 'groupmebotcouncil.herokuapp.com']
 
 
 # Application definition
