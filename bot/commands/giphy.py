@@ -5,6 +5,7 @@ from ..models import MediaFile
 def get_giphy_image_url(search_term):
     response = requests.get('https://api.giphy.com/v1/gifs/search',
                             params={'api_key': os.environ.get('GIPHY_API_KEY', ''), 'q': search_term, 'limit': 1})
+    print(response)
     try:
         giphy_image_url = response.json()['data'][0]['images']['original']['url']
     except Exception as e:
@@ -21,5 +22,6 @@ def send_giphy(bot, search_term):
         giphy_mediafile = MediaFile.objects.create(bot=bot, name=search_term, url=giphy_image_url)
         post_mediafile_from_url(giphy_mediafile)
     else:
-        no_result_mediafile = MediaFile.objects.get(name="no_result")
+        no_result_mediafile, created = MediaFile.objects.get_or_create(name="no_result.gif", bot=bot)
+        print(no_result_mediafile)
         post_mediafile_from_server(no_result_mediafile)

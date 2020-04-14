@@ -5,9 +5,10 @@ import os
 def post_mediafile_from_url(mediafile):
     # Save image to local disk
     giphy_response = requests.get(mediafile.url, stream=True)
+
     dirname = os.path.dirname(__file__)
     fpath = os.path.join(dirname, 'media', 'tmp')
-    fname = '_'.join([mediafile.name, mediafile.bot.pk, mediafile.pk])
+    fname = '_'.join([mediafile.name, mediafile.bot.pk, mediafile.pk]) + '.gif'
     write_path = os.path.join(fpath, fname)
     with open(write_path, 'wb') as writer:
         for chunk in giphy_response:
@@ -31,6 +32,7 @@ def post_mediafile_from_url(mediafile):
 
 
 def post_mediafile_from_server(mediafile):
+    # TODO Fix filepath
     dirname = os.path.dirname(__file__)
     read_path = os.path.join(dirname, 'media', 'permanent', mediafile.name)
     with open(read_path, 'rb') as reader:
