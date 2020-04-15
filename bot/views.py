@@ -52,20 +52,41 @@ def is_bot_command(response):
 def process_command(bot, most_recent_response):
     groupme_user_id = most_recent_response['user_id']
     groupmember, created = GroupMember.objects.get_or_create(bot=bot, groupme_user_id=groupme_user_id)
-    if created:
-        groupmember.name = most_recent_response['name']
+    groupmember.name = most_recent_response['name']
+    groupmember.save()
     message_text = most_recent_response['text']
     command_tokens = message_text.split()
     command = command_tokens[0].replace('!', '').upper()
     args = command_tokens[1:]
+    print(groupmember.is_admin)
+    print()
+    if command == 'DEACTIVATE' and groupmember.is_moderator:
+        bot.is_active = False
+        bot.save()
+    elif command == 'ACTIVATE' and groupmember.is_admin:
+        bot.is_active = True
+
     if bot.is_active:
-        if command == 'DEACTIVATE' and groupmember.is_admin:
-            bot.is_active = False
+        if command == 'KNIGHT' and groupmember.is_admin:
+            try:
+                search_name = ''.join(args)
+                search_groupmember = GroupMember.objects.get(bot=bot, name=search_name)
+                search_groupmember.is_moderator = True
+                search_groupmember.save()
+            except Exception as e:
+                print("Couldn't find groupmember")
+                pass
+        elif command == 'OUST' and groupmember.is_admin:
+            try:
+                search_name = ''.join(args)
+                search_groupmember = GroupMember.objects.get(bot=bot, name=search_name)
+                search_groupmember.is_moderator = False
+                search_groupmember.save()
+            except Exception as e:
+                print("Couldn't find groupmember")
+                pass
         elif command == 'GIF':
             giphy.send_giphy(bot=bot, search_term=' '.join(args))
-    else:
-        if command == 'ACTIVATE' and groupmember.is_admin:
-            bot.is_active = True
 
 
 def process_response(bot, message_response):
