@@ -31,8 +31,6 @@ def get_message(bot, request_params):
         response_messages = requests.get('https://api.groupme.com/v3/groups/' + groupme_group_id + '/messages',
                                          params=request_params).json()['response']['messages']
         most_recent_response = response_messages[0]
-        # most_recent_response = {'text': "!gif orca", 'sender_type': "user"}
-        print(most_recent_response)
         if is_bot_command(most_recent_response):
             print("Bot has received a message")
             process_command(bot, most_recent_response['text'])
