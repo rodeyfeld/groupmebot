@@ -5,8 +5,8 @@ from ..models import MediaFile
 def get_giphy_image_url(search_term):
     response = requests.get('https://api.giphy.com/v1/gifs/search',
                             params={'api_key': os.environ.get('GIPHY_API_KEY', ''), 'q': search_term, 'limit': 1})
-    print(response)
     try:
+        print(response.json()['data'][0]['images']['original']['url'])
         giphy_image_url = response.json()['data'][0]['images']['original']['url']
     except Exception as e:
         print(e)

@@ -12,6 +12,7 @@ import os
 def index(request):
     return HttpResponse("Bot listener index")
 
+
 @csrf_exempt
 def bot_reciever(request, groupme_bot_id):
     bot = Bot.objects.get(groupme_bot_id=groupme_bot_id)
@@ -60,5 +61,3 @@ def process_command(bot, message_response):
 
 def process_response(bot, message_response):
     return True
-
-
