@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 
 from .commands import giphy
 from .models import Bot
@@ -11,7 +12,7 @@ import os
 def index(request):
     return HttpResponse("Bot listener index")
 
-
+@csrf_exempt
 def bot_reciever(request, groupme_bot_id):
     bot = Bot.objects.get(groupme_bot_id=groupme_bot_id)
     bot_name = bot.name
