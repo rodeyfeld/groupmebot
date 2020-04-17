@@ -35,7 +35,6 @@ def post_mediafile_from_url(mediafile):
 
 
 def post_mediafile_from_server(mediafile):
-    # TODO Fix filepath
     read_path = os.path.join(settings.MEDIA_DIR, 'permanent', mediafile.name)
     with open(read_path, 'rb') as reader:
         reader_data = reader.read()

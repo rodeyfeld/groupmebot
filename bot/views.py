@@ -58,32 +58,41 @@ def process_command(bot, most_recent_response):
     command_tokens = message_text.split()
     command = command_tokens[0].replace('!', '').upper()
     args = command_tokens[1:]
-    print(groupmember.is_admin)
-    print()
+
     if command == 'DEACTIVATE' and groupmember.is_moderator:
         bot.is_active = False
+        request_params = {'bot_id': bot.groupme_bot_id, 'text': 'Bot has been activated'}
+        requests.post('https://api.groupme.com/v3/bots/post', params=request_params)
         bot.save()
-    elif command == 'ACTIVATE' and groupmember.is_admin:
+    elif command == 'ACTIVATE' and groupmember.is_moderator:
         bot.is_active = True
-
+        request_params = {'bot_id': bot.groupme_bot_id, 'text': 'Bot has been activated'}
+        requests.post('https://api.groupme.com/v3/bots/post', params=request_params)
+        bot.save()
     if bot.is_active:
         if command == 'KNIGHT' and groupmember.is_admin:
             try:
-                search_name = ''.join(args)
+                search_name = ' '.join(args)[1:]
                 search_groupmember = GroupMember.objects.get(bot=bot, name=search_name)
                 search_groupmember.is_moderator = True
                 search_groupmember.save()
+                request_params = {'bot_id': bot.groupme_bot_id, 'text': search_name + ' has been knighted'}
+                requests.post('https://api.groupme.com/v3/bots/post', params=request_params)
             except Exception as e:
-                print("Couldn't find groupmember")
+                request_params = {'bot_id': bot.groupme_bot_id, 'text': 'Could not find groupmember' + search_name}
+                requests.post('https://api.groupme.com/v3/bots/post', params=request_params)
                 pass
         elif command == 'OUST' and groupmember.is_admin:
             try:
-                search_name = ''.join(args)
+                search_name = ' '.join(args)[1:]
                 search_groupmember = GroupMember.objects.get(bot=bot, name=search_name)
                 search_groupmember.is_moderator = False
                 search_groupmember.save()
+                request_params = {'bot_id': bot.groupme_bot_id, 'text': search_name + ' has been ousted'}
+                requests.post('https://api.groupme.com/v3/bots/post', params=request_params)
             except Exception as e:
-                print("Couldn't find groupmember")
+                request_params = {'bot_id': bot.groupme_bot_id, 'text': 'Could not find groupmember' + search_name}
+                requests.post('https://api.groupme.com/v3/bots/post', params=request_params)
                 pass
         elif command == 'GIF':
             giphy.send_giphy(bot=bot, search_term=' '.join(args))
