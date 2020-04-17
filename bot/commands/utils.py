@@ -6,7 +6,7 @@ import os
 def post_mediafile_from_url(mediafile):
     # Save image to local disk
     giphy_response = requests.get(mediafile.url, stream=True)
-    fpath = os.path.join(settings.MEDIA_DIR, 'tmp')
+    fpath = os.path.join(settings.MEDIA_DIR, 'temp_files')
     fname = '_'.join([mediafile.name, str(mediafile.bot.pk), str(mediafile.pk)]) + '.gif'
     file_path = os.path.join(fpath, fname)
     with open(file_path, 'wb') as writer:
