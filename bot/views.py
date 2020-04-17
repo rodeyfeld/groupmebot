@@ -4,7 +4,7 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
 from .commands import giphy
-from .models import Bot
+from .models import Bot, GroupMember
 import requests
 import os
 
@@ -33,7 +33,7 @@ def get_message(bot, request_params):
         most_recent_response = response_messages[0]
         if is_bot_command(most_recent_response):
             print("Bot has received a message")
-            process_command(bot, most_recent_response['text'])
+            process_command(bot=bot, most_recent_response=most_recent_response)
         else:
             print("User or bot has sent a message")
             process_response(bot, most_recent_response)
@@ -49,12 +49,53 @@ def is_bot_command(response):
         return True
 
 
-def process_command(bot, message_response):
-    command_tokens = message_response.split()
+def process_command(bot, most_recent_response):
+    groupme_user_id = most_recent_response['user_id']
+    groupmember, created = GroupMember.objects.get_or_create(bot=bot, groupme_user_id=groupme_user_id)
+    groupmember.name = most_recent_response['name']
+    groupmember.save()
+    message_text = most_recent_response['text']
+    command_tokens = message_text.split()
     command = command_tokens[0].replace('!', '').upper()
     args = command_tokens[1:]
-    if command == 'GIF':
-        giphy.send_giphy(bot=bot, search_term=' '.join(args))
+
+    if command == 'DEACTIVATE' and groupmember.is_moderator:
+        bot.is_active = False
+        request_params = {'bot_id': bot.groupme_bot_id, 'text': 'Bot has been activated'}
+        requests.post('https://api.groupme.com/v3/bots/post', params=request_params)
+        bot.save()
+    elif command == 'ACTIVATE' and groupmember.is_moderator:
+        bot.is_active = True
+        request_params = {'bot_id': bot.groupme_bot_id, 'text': 'Bot has been activated'}
+        requests.post('https://api.groupme.com/v3/bots/post', params=request_params)
+        bot.save()
+    if bot.is_active:
+        if command == 'KNIGHT' and groupmember.is_admin:
+            try:
+                search_name = ' '.join(args)[1:]
+                search_groupmember = GroupMember.objects.get(bot=bot, name=search_name)
+                search_groupmember.is_moderator = True
+                search_groupmember.save()
+                request_params = {'bot_id': bot.groupme_bot_id, 'text': search_name + ' has been knighted'}
+                requests.post('https://api.groupme.com/v3/bots/post', params=request_params)
+            except Exception as e:
+                request_params = {'bot_id': bot.groupme_bot_id, 'text': 'Could not find groupmember' + search_name}
+                requests.post('https://api.groupme.com/v3/bots/post', params=request_params)
+                pass
+        elif command == 'OUST' and groupmember.is_admin:
+            try:
+                search_name = ' '.join(args)[1:]
+                search_groupmember = GroupMember.objects.get(bot=bot, name=search_name)
+                search_groupmember.is_moderator = False
+                search_groupmember.save()
+                request_params = {'bot_id': bot.groupme_bot_id, 'text': search_name + ' has been ousted'}
+                requests.post('https://api.groupme.com/v3/bots/post', params=request_params)
+            except Exception as e:
+                request_params = {'bot_id': bot.groupme_bot_id, 'text': 'Could not find groupmember' + search_name}
+                requests.post('https://api.groupme.com/v3/bots/post', params=request_params)
+                pass
+        elif command == 'GIF':
+            giphy.send_giphy(bot=bot, search_term=' '.join(args))
 
 
 def process_response(bot, message_response):
