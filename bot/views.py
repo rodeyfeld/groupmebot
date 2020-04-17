@@ -61,7 +61,7 @@ def process_command(bot, most_recent_response):
 
     if command == 'DEACTIVATE' and groupmember.is_moderator:
         bot.is_active = False
-        request_params = {'bot_id': bot.groupme_bot_id, 'text': 'Bot has been activated'}
+        request_params = {'bot_id': bot.groupme_bot_id, 'text': 'Bot has been deactivated'}
         requests.post('https://api.groupme.com/v3/bots/post', params=request_params)
         bot.save()
     elif command == 'ACTIVATE' and groupmember.is_moderator:
