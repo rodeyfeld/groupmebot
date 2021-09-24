@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
-from .commands import giphy
+from .commands import giphy, lotr
 from .models import Bot, GroupMember
 import requests
 import os
@@ -96,6 +96,8 @@ def process_command(bot, most_recent_response):
                 pass
         elif command == 'GIF':
             giphy.send_giphy(bot=bot, search_term=' '.join(args))
+        elif command == 'LOTRQ':
+            lotr.send_lotrq(bot=bot, search_args=args)
 
 
 def process_response(bot, message_response):

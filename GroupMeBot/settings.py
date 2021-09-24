@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'GroupMeBot.wsgi.application'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = {}
-if os.environ.get('GROUPMEBOT_LOCAL', None):    
+if os.environ.get('GROUPME_BOT_LOCAL', None):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
