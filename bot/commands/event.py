@@ -8,6 +8,7 @@ from django.conf import settings
 
 
 def send_event(bot):
+    print(bot.groupme_bot_id)
     if bot.groupme_bot_id == '86257932':
         quote_string = f"https://goo.gl/maps/cqUnVWxayqHiqBT68"
         request_params = {'bot_id': bot.groupme_bot_id, 'text': re.sub(r'\s+', ' ', quote_string)}
