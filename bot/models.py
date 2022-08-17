@@ -11,9 +11,9 @@ class Bot(models.Model):
 
 class MediaFile(models.Model):
     bot = models.ForeignKey('Bot', null=True, blank=True, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, blank=True)
+    name = models.CharField(max_length=1000, blank=True)
     search_term = models.CharField(max_length=100, blank=True)
-    url = models.CharField(max_length=200, blank=True)
+    url = models.CharField(max_length=2000, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
 
