@@ -22,11 +22,12 @@ def get_dalle_image(bot, search_term):
 
     response = requests.post(url, headers=headers, data=json.dumps(body))
     data = response.json()
+    print('DATA FROM 1:', data)
     while True:
         url = f"https://labs.openai.com/api/labs/tasks/{data['id']}"
         response = requests.get(url, headers=headers)
         data = response.json()
-
+        print('DATA FROM 2:', data)
         if not response.ok:
             print(f"Request failed with status: {response.status_code}, data: {response.json()}")
             return None
