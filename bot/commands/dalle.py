@@ -44,7 +44,7 @@ def get_dalle_image(bot, search_term):
     if data_req:
         for generation in data_req:
             image_url = generation["generation"]["image_path"]
-            dalle_mediafile = MediaFile.objects.create(bot=bot, name=prompt, url=image_url)
+            dalle_mediafile = MediaFile.objects.create(bot=bot, name=search_term, url=image_url)
             post_to_bot(dalle_mediafile)
 
 
