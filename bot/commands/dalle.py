@@ -51,6 +51,7 @@ def get_dalle_image(bot, search_term):
 
 def post_to_bot(mediafile):
     dalle_response = requests.get(mediafile.url, stream=True)
+    print(dalle_response, dalle_response.status_code)
     fpath = os.path.join(settings.MEDIA_DIR, 'temp_files')
     fname = '_'.join([mediafile.name, str(mediafile.bot.pk), str(mediafile.pk)]) + '.png'
     file_path = os.path.join(fpath, fname)
@@ -72,8 +73,4 @@ def post_to_bot(mediafile):
     # Post image to the bot's group
     request_params = {'bot_id': mediafile.bot.groupme_bot_id, 'picture_url': image_service_url}
     response = requests.post('https://api.groupme.com/v3/bots/post', params=request_params)
-    if os.path.isfile(file_path):
-        os.remove(file_path)
-    else:
-        print("Error: %s file not found" % file_path)
     return response
