@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
-from .commands import giphy, lotr, event
+from .commands import giphy, lotr, event, dalle
 from .models import Bot, GroupMember
 import requests
 import os
@@ -100,7 +100,8 @@ def process_command(bot, most_recent_response):
             lotr.send_lotrq(bot=bot, search_args=args)
         elif command == 'EVENT':
             event.send_event(bot=bot)
-
+        elif command == 'DALLE':
+            dalle.get_dalle_image(bot=bot, search_term=' '.join(args))
 
 
 def process_response(bot, message_response):
